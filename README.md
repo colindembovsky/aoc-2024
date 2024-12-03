@@ -14,3 +14,4 @@ Edit `program.ts` for the day, pasting in the sample and real data. Then simply 
 
 ## Debugging
 
+Set a breakpoint in the `program.ts` file for the day you're working on and fire up the VSCode debugger with the profile `Debug Program`.
