@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "npx tsc"
+    "build": "npx tsc",
+    "go": "yarn run build && node ./dist/day$DAY/program.js"
   },
   "repository": {
     "type": "git",
