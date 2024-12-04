@@ -68,9 +68,9 @@ console.log(`Total count: ${total}`);
 
 console.log(`==== ${day}: PART 2 ====`);
 
-function countXShapedMAS(grid: string[][]): number {
-    const height = grid.length;
-    const width = grid[0].length;
+function countXShapedMAS(): number {
+    const height = letters.length;
+    const width = letters[0].length;
     let count = 0;
 
     // Helper to check if position is within grid bounds
@@ -82,18 +82,18 @@ function countXShapedMAS(grid: string[][]): number {
     for (let row = 0; row < height; row++) {
         for (let col = 0; col < width; col++) {
             // Check if current position is 'A'
-            if (grid[row][col] === 'A') {
+            if (letters[row][col] === 'A') {
                 // Check upper-left to lower-right diagonal
                 const hasMS1 = isValid(row - 1, col - 1) && 
                              isValid(row + 1, col + 1) &&
-                             ((grid[row - 1][col - 1] === 'M' && grid[row + 1][col + 1] === 'S') ||
-                              (grid[row - 1][col - 1] === 'S' && grid[row + 1][col + 1] === 'M'));
+                             ((letters[row - 1][col - 1] === 'M' && letters[row + 1][col + 1] === 'S') ||
+                              (letters[row - 1][col - 1] === 'S' && letters[row + 1][col + 1] === 'M'));
 
                 // Check upper-right to lower-left diagonal
                 const hasMS2 = isValid(row - 1, col + 1) && 
                              isValid(row + 1, col - 1) &&
-                             ((grid[row - 1][col + 1] === 'M' && grid[row + 1][col - 1] === 'S') ||
-                              (grid[row - 1][col + 1] === 'S' && grid[row + 1][col - 1] === 'M'));
+                             ((letters[row - 1][col + 1] === 'M' && letters[row + 1][col - 1] === 'S') ||
+                              (letters[row - 1][col + 1] === 'S' && letters[row + 1][col - 1] === 'M'));
 
                 // If both diagonals have valid MS/SM patterns
                 if (hasMS1 && hasMS2) {
@@ -106,5 +106,5 @@ function countXShapedMAS(grid: string[][]): number {
     return count;
 }
 
-total = countXShapedMAS(letters);
+total = countXShapedMAS();
 console.log(`Total X-MAS count: ${total}`); 
