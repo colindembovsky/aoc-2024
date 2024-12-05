@@ -42,6 +42,35 @@ class Update {
         }
         this.isCorrectlyOrdered
     }
+
+    fixOrder() {
+        const result: number[] = [];
+        
+        for (const num of this.pageNums) {
+            let insertPos = result.length; // default to end
+            const rule = rules.get(num);
+            
+            if (rule) {
+                // Check if any numbers in result are in beforePages or afterPages
+                for (let i = 0; i < result.length; i++) {
+                    const existingNum = result[i];
+                    
+                    if (rule.beforePages.includes(existingNum)) {
+                        // num should come before existingNum
+                        insertPos = Math.min(insertPos, i);
+                    }
+                    if (rule.afterPages.includes(existingNum)) {
+                        // num should come after existingNum
+                        insertPos = Math.max(insertPos, i + 1);
+                    }
+                }
+            }
+            
+            result.splice(insertPos, 0, num);
+        }
+        
+        this.pageNums = result;
+    }
 }
 
 let parts = contents.split("\n\n");
@@ -55,4 +84,10 @@ let updates = rawUpdates.map(u => new Update(u));
 
 console.log(`==== ${day}: PART 1 ====`);
 let sum = updates.filter(u => u.isCorrectlyOrdered).reduce((acc, u) => acc + u.middleNumber, 0);
+console.log(`Sum: ${sum}`);
+
+console.log(`==== ${day}: PART 2 ====`);
+let broken = updates.filter(u => !u.isCorrectlyOrdered);
+broken.forEach(b => b.fixOrder());
+sum = broken.reduce((acc, u) => acc + u.middleNumber, 0);
 console.log(`Sum: ${sum}`);
