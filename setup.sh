@@ -1,9 +1,10 @@
 #!/bin/bash
 
-SOURCE_DIR="day01"
+SOURCE_DIR="day00"
 
-for i in {2..20}
+for i in {7..20}
 do
   TARGET_DIR=$(printf "day%02d" $i)
-  cp -r "$SOURCE_DIR" "$TARGET_DIR"
+  rm -rf "$TARGET_DIR"    # Remove target dir if it exists
+  cp -rf "$SOURCE_DIR" "$TARGET_DIR"  # Force copy and overwrite
 done
