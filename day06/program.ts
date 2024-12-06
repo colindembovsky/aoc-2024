@@ -39,8 +39,14 @@ function parseGrid(lines: string[]): {
     return { grid, startPos, startDir };
 }
 
-function calculateVisitedSpaces(grid: string[][], startPos: Position, startDir: Direction): number {
+interface VisitResult {
+    isLoop: boolean;
+    numVisitedSpaces: number;
+}
+
+function calculateVisitedSpaces(grid: string[][], startPos: Position, startDir: Direction): VisitResult {
     const visited = new Set<string>();
+    const states = new Set<string>();
     const directions = [
         { dx: 0, dy: -1 }, // UP
         { dx: 1, dy: 0 },  // RIGHT
@@ -52,10 +58,15 @@ function calculateVisitedSpaces(grid: string[][], startPos: Position, startDir: 
     let currentDir = startDir;
     
     while (true) {
-        // Mark current position as visited
+        const stateKey = `${currentPos.x},${currentPos.y},${currentDir}`;
+        
+        if (states.has(stateKey)) {
+            return { isLoop: true, numVisitedSpaces: visited.size };
+        }
+        
+        states.add(stateKey);
         visited.add(`${currentPos.x},${currentPos.y}`);
 
-        // Calculate next position
         const dir = directions[currentDir];
         const nextPos = {
             x: currentPos.x + dir.dx,
@@ -65,7 +76,7 @@ function calculateVisitedSpaces(grid: string[][], startPos: Position, startDir: 
         // Check if we're out of bounds
         if (nextPos.y < 0 || nextPos.y >= grid.length ||
             nextPos.x < 0 || nextPos.x >= grid[0].length) {
-            break;
+            return { isLoop: false, numVisitedSpaces: visited.size };
         }
 
         // Check if we hit an obstacle
@@ -76,14 +87,42 @@ function calculateVisitedSpaces(grid: string[][], startPos: Position, startDir: 
 
         currentPos = nextPos;
     }
-
-    return visited.size;
 }
 
-function solve(input: string[]): number {
-    const { grid, startPos, startDir } = parseGrid(input);
-    return calculateVisitedSpaces(grid, startPos, startDir);
+function findLoopingPositions(grid: string[][], startPos: Position, startDir: Direction): number {
+    let loopCount = 0;
+    
+    // Try each empty space
+    for (let y = 0; y < grid.length; y++) {
+        for (let x = 0; x < grid[0].length; x++) {
+            if (grid[y][x] === '.') {
+                // Skip start position
+                if (x === startPos.x && y === startPos.y) {
+                    continue;
+                }
+                
+                // Create grid copy and add obstacle
+                const testGrid = grid.map(row => [...row]);
+                testGrid[y][x] = '#';
+                
+                // Test if guard gets stuck
+                const result = calculateVisitedSpaces(testGrid, startPos, startDir);
+                if (result.isLoop) {
+                    loopCount++;
+                }
+            }
+        }
+    }
+    
+    return loopCount;
 }
+
+const { grid, startPos, startDir } = parseGrid(lines);
 
 console.log(`==== ${day}: PART 1 ====`);
-console.log(`Result: ${solve(lines)}`);
+const count = calculateVisitedSpaces(grid, startPos, startDir).numVisitedSpaces;
+console.log(`Result: ${count}`);
+
+console.log(`==== ${day}: PART 2 ====`);
+const loopCount = findLoopingPositions(grid, startPos, startDir);
+console.log(`Result: ${loopCount}`);
