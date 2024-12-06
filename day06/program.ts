@@ -1,4 +1,5 @@
 import { loadInput, dayName, Difficulty } from "../utils/readUtils";
+import { timedExecute } from "../utils/miscUtils";
 
 let day = dayName(__dirname);
 let contents = loadInput(__dirname, Difficulty.HARD);
@@ -120,9 +121,13 @@ function findLoopingPositions(grid: string[][], startPos: Position, startDir: Di
 const { grid, startPos, startDir } = parseGrid(lines);
 
 console.log(`==== ${day}: PART 1 ====`);
-const count = calculateVisitedSpaces(grid, startPos, startDir).numVisitedSpaces;
-console.log(`Result: ${count}`);
+timedExecute(() => {
+    const count = calculateVisitedSpaces(grid, startPos, startDir).numVisitedSpaces
+    console.log(`Result: ${count}`);
+});
 
 console.log(`==== ${day}: PART 2 ====`);
-const loopCount = findLoopingPositions(grid, startPos, startDir);
-console.log(`Result: ${loopCount}`);
+timedExecute(() => {
+    const loopCount = findLoopingPositions(grid, startPos, startDir)
+    console.log(`Result: ${loopCount}`);
+});
