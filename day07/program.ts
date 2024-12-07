@@ -13,7 +13,14 @@ function checkIfValid(target: number, nums: number[]): boolean {
     if (target % nums[0] == 0) {
         if (checkIfValid(target / nums[0], nums.slice(1))) return true;
     }
-    return checkIfValid(target - nums[0], nums.slice(1));
+    if (checkIfValid(target - nums[0], nums.slice(1))) return true;
+
+    let concatTarget = `${target}`;
+    if (concatTarget.endsWith(`${nums[0]}`)) {
+        let newTarget = parseInt(concatTarget.slice(0, -`${nums[0]}`.length));
+        return checkIfValid(newTarget, nums.slice(1));
+    }
+    return false;
 }
 
 console.log(`==== ${day}: PART 1 ====`);
@@ -25,7 +32,6 @@ timedExecute(() => {
         let nums = parts[1].trim().split(" ").map(n => parseInt(n)).reverse();
         return { target, nums, valid: checkIfValid(target, nums) };
     });
-    // add the target of the lines where the checkWorks is true
     let sum = checkLines.filter(cl => cl.valid).reduce((acc, cl) => acc + cl.target, 0);
     console.log(`Sum of targets that are valid: ${sum}`);
 });
