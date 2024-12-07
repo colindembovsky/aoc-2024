@@ -6,19 +6,14 @@ let contents = loadInput(__dirname, Difficulty.HARD);
 let lines = contents.split("\n");
 
 function checkIfValid(target: number, nums: number[]): boolean {
-    let op1works = false;
-    let op2Works = false;
-
     if (nums.length == 1) {
         return nums[0] == target;
     }
     
     if (target % nums[0] == 0) {
-        op1works = checkIfValid(target / nums[0], nums.slice(1));
-        if (op1works) return true;
+        if (checkIfValid(target / nums[0], nums.slice(1))) return true;
     }
-    op2Works = checkIfValid(target - nums[0], nums.slice(1));
-    return op1works || op2Works;
+    return checkIfValid(target - nums[0], nums.slice(1));
 }
 
 console.log(`==== ${day}: PART 1 ====`);
